@@ -26,13 +26,13 @@ override LDFLAGS  += -Wl,-rpath=${CUDAPATH}/lib
 override LDFLAGS  += -lcublas
 override LDFLAGS  += -lcudart
 
-COMPUTE      ?= 50
-CUDA_VERSION ?= 11.8.0
-IMAGE_DISTRO ?= ubi8
+COMPUTE_CAPABILITY 	?= 90
+CUDA_VERSION 		?= 12.8.0
+IMAGE_DISTRO 		?= ubi9
 
 override NVCCFLAGS ?=
 override NVCCFLAGS += -I${CUDAPATH}/include
-override NVCCFLAGS += -arch=compute_$(subst .,,${COMPUTE})
+override NVCCFLAGS += -arch=compute_$(subst .,,${COMPUTE_CAPABILITY})
 
 IMAGE_NAME ?= gpu-burn
 
@@ -51,4 +51,4 @@ clean:
 	$(RM) *.ptx *.o gpu_burn
 
 image:
-	docker build --build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg IMAGE_DISTRO=${IMAGE_DISTRO} -t ${IMAGE_NAME} .
+	docker build --build-arg COMPUTE_CAPABILITY=${COMPUTE_CAPABILITY} --build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg IMAGE_DISTRO=${IMAGE_DISTRO} -t ${IMAGE_NAME} .
